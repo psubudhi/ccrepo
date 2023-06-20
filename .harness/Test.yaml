@@ -1,0 +1,43 @@
+pipeline:
+  name: Test
+  identifier: Test
+  projectIdentifier: default_project
+  orgIdentifier: default
+  tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: harnessgitconnector
+        repoName: https://github.com/psubudhi/harnesscd-example-apps
+        build: <+input>
+  stages:
+    - stage:
+        name: harnessEx
+        identifier: harnessEx
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          execution:
+            steps:
+              - step:
+                  type: ArtifactoryUpload
+                  name: ArtifactoryUpload_1
+                  identifier: ArtifactoryUpload_1
+                  spec:
+                    connectorRef: Jfrog
+                    target: /mavenkey
+                    sourcePath: D:\JOBS\Oraayaah-Remote\Tasks\HelloWorldMaven-master\target
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: BuildAndPushDockerRegistry_1
+                  identifier: BuildAndPushDockerRegistry_1
+                  spec: {}
+          platform:
+            os: Windows
+            arch: Arm64
+          runtime:
+            type: Docker
+            spec: {}
+        delegateSelectors:
+          - firstk8sdel
