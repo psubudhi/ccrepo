@@ -50,7 +50,13 @@ pipeline:
                                 $username = "admin"
                                 $password = "cmVmdGtuOjAxOjE3MTg4ODk4NTk6c3Eza3dqR2xvRUY2M0N6Vm1NeHprU0tDTENT"
 
-                                Write-Host <+pipeline.stages.winrmstage.spec.artifacts.primary.dockerConfigJsonSecret> | Out-File -FilePath C:\Users\hp\.docker\config.json 
+                                $base64Text = "<+pipeline.stages.winrmstage.spec.artifacts.primary.dockerConfigJsonSecret>"
+                                Write-Host $base64Text
+                                $decodedText = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($base64Text))
+                                $filePath = "C:\Users\hp\.docker\config.json"
+                                $decodedText | Out-File -FilePath $filePath
+
+                                Write-Host $decodedText
 
                                 docker login -u $username -p $password premartifactory.jfrog.io
 
