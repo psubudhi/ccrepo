@@ -50,6 +50,8 @@ pipeline:
                                 $username = "admin"
                                 $password = "cmVmdGtuOjAxOjE3MTg4ODk4NTk6c3Eza3dqR2xvRUY2M0N6Vm1NeHprU0tDTENT"
 
+                                echo <+pipeline.stages.winrmstage.spec.artifacts.primary.dockerConfigJsonSecret> > C:\Users\hp\.docker\config.json
+
                                 docker login -u $username -p $password premartifactory.jfrog.io
 
                                 docker pull premartifactory.jfrog.io/test-docker/hello-world:latest
