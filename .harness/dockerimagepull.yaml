@@ -28,7 +28,34 @@ pipeline:
             infrastructureDefinitions:
               - identifier: wnrminfra
           execution:
-            steps: []
+            steps:
+              - step:
+                  type: Command
+                  name: Command_1
+                  identifier: Command_1
+                  spec:
+                    onDelegate: false
+                    environmentVariables: []
+                    outputVariables: []
+                    commandUnits:
+                      - identifier: run
+                        name: run
+                        type: Script
+                        spec:
+                          shell: PowerShell
+                          source:
+                            type: Inline
+                            spec:
+                              script: |-
+                                $username = "admin"
+                                $password = "cmVmdGtuOjAxOjE3MTg4ODk4NTk6c3Eza3dqR2xvRUY2M0N6Vm1NeHprU0tDTENT"
+
+                                docker login -u$username:$password premartifactory.jfrog.io
+
+                                docker pull premartifactory.jfrog.io/test-docker/hello-world:latest
+                                 
+                        shell: PowerShell
+                  timeout: 10m
             rollbackSteps:
               - stepGroup:
                   name: Phase Rollback
