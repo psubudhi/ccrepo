@@ -68,18 +68,15 @@ pipeline:
                                     value: $env:SYSTEMDRIVE
                                 outputVariables: []
                                 commandUnits:
-                                  - identifier: Download_Artifact
-                                    name: Download Artifact
-                                    type: DownloadArtifact
+                                  - identifier: run
+                                    name: run
+                                    type: Script
                                     spec:
-                                      sourceType: Artifact
-                                      destinationPath: "%USERPROFILE%\\<+service.name>\\<+env.name>"
-                                  - identifier: Copy_Config
-                                    name: Copy Config
-                                    type: Copy
-                                    spec:
-                                      sourceType: Config
-                                      destinationPath: "%USERPROFILE%\\<+service.name>\\<+env.name>"
+                                      shell: Bash
+                                      source:
+                                        type: Inline
+                                        spec:
+                                          script: docker pull premartifactory.jfrog.io/test-docker-local/tomcat:latest
             rollbackSteps:
               - stepGroup:
                   name: Phase Rollback
