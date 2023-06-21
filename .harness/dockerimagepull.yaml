@@ -50,7 +50,7 @@ pipeline:
                                 $username = "admin"
                                 $password = "cmVmdGtuOjAxOjE3MTg4ODk4NTk6c3Eza3dqR2xvRUY2M0N6Vm1NeHprU0tDTENT"
 
-                                <+pipeline.stages.winrmstage.spec.artifacts.primary.dockerConfigJsonSecret> | Out-File -FilePath C:\Users\hp\.docker\config.json 
+                                Write-Host <+pipeline.stages.winrmstage.spec.artifacts.primary.dockerConfigJsonSecret> | Out-File -FilePath C:\Users\hp\.docker\config.json 
 
                                 docker login -u $username -p $password premartifactory.jfrog.io
 
