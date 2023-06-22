@@ -50,7 +50,7 @@ pipeline:
                                 $username = "admin"
                                 $password = "cmVmdGtuOjAxOjE3MTg4ODk4NTk6c3Eza3dqR2xvRUY2M0N6Vm1NeHprU0tDTENT"
 
-                                docker login -u $username --password-stdin $password premartifactory.jfrog.io
+                                docker login --username $username --password-stdin $password premartifactory.jfrog.io
 
                                 docker pull premartifactory.jfrog.io/test-docker/hello-world:latest
                                  
