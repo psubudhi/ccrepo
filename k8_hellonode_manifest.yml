@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: hellonode-pod
+  name: tomcat-pod
 spec:
   containers:
-  - name: my-container
-    image: premsubudhi/hellonode:latest
+  - name: tomcat-container
+    image: pksubudhi/tomcat:latest
     ports:
     - containerPort: 8080
