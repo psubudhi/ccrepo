@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-tomcat-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-tomcat
+      env: dev
+  template:
+    metadata:
+      labels:
+        app: test-tomcat
+    spec:
+      initContainers: 
+      - name: init-artifact-downloader
+        image: appropriate/curl
+        args:
+        - "-o"
+        - "/tmp/HelloWorldSecond.war"
+        - "https://premartifactory.jfrog.io/ui/repos/tree/General/localrepo/HelloWorldSecond.war"
+        volumeMounts:
+        - name: init-script 
+          mountPath: /tmp
+      containers:
+      - name: test-tomcat-container
+        image: premartifactory.jfrog.io/test-docker-local/tomcat123:latest
+        volumeMounts:
+        - mountPath: /usr/local/tomcat/webapps
+          name: war-file
+        ports:
+        - containerPort: 8080
+        lifecycle:
+          postStart:
+            exec:
+              command: [ "/bin/sh","-c","sh ./bin/shutdown.sh && sh ./bin/startup.sh" ]
+      imagePullSecrets:
+      - name: test-tomcat-secret
+      volumes:
+      - hostPath:
+          path: /tmp
+          type: DirectoryOrCreate
+        name: war-file
+      - hostPath:
+          path: /tmp
+          type: DirectoryOrCreate
+        name: init-script
+---
+apiVersion: v1
+kind: Secret
+items:
+- apiVersion: v1
+  data:
+    .dockerconfigjson: eyJhdXRocyI6eyJwcmVtYXJ0aWZhY3RvcnkuamZyb2cuaW8iOnsidXNlcm5hbWUiOiJhZG1pbiIsInBhc3N3b3JkIjoiR2FuZXNoc3JpYWNjdEAxIiwiZW1haWwiOiJzdWJwcmVtQGdtYWlsLmNvbSIsImF1dGgiOiJZV1J0YVc0NlIyRnVaWE5vYzNKcFlXTmpkRUF4In19fQ==
+  kind: Secret
+  metadata:
+    creationTimestamp: "2023-06-23T08:47:49Z"
+    name: test-tomcat-secret
+    namespace: default
+  type: kubernetes.io/dockerconfigjson
+  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: test-tomcat
+  name: test-tomcat-svc
+  namespace: default
+spec:
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - nodePort: 30080
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: test-tomcat
+  type: NodePort
+status:
+  loadBalancer: {}
+
