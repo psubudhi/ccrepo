@@ -49,6 +49,8 @@ spec:
 ---
 apiVersion: v1
 kind: Secret
+metadata:
+  name: test-tomcat-secret
 items:
 - apiVersion: v1
   data:
