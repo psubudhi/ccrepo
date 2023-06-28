@@ -59,6 +59,17 @@ pipeline:
                   strategy:
                     repeat:
                       items: <+stage.output.hosts>
+              - step:
+                  type: JenkinsBuild
+                  name: JenkinsBuild_1
+                  identifier: JenkinsBuild_1
+                  spec:
+                    connectorRef: JenkinsLocal
+                    jobName: MvnProjArtifactory
+                    jobParameter: []
+                    unstableStatusAsSuccess: false
+                    useConnectorUrlForJobExecution: false
+                  timeout: <+input>
             rollbackSteps:
               - stepGroup:
                   name: Phase Rollback
